@@ -7,6 +7,7 @@ const { expect } = chai;
 
 describe('Github POST and PATCH request Test', () => {
   let repo;
+  let respon;
   let issue;
   it('Checking number of public repositories', async () => {
     const response = await agent.get('https://api.github.com/user')
@@ -23,12 +24,12 @@ describe('Github POST and PATCH request Test', () => {
       .set('User-Agent', 'agent')
       .auth('token', process.env.ACCESS_TOKEN);
 
-    repo = response.body;
-    expect(repo).to.not.equal(undefined);
+    respon = response.body;
+    expect(respon).to.not.equal(undefined);
   });
 
   it('Creating an issue', async () => {
-    const response = await agent.post(`https://api.github.com/repos/${repo.login}/${repo.name}/issues`)
+    const response = await agent.post(`https://api.github.com/repos/${repo.login}/${respon.name}/issues`)
       .send({ title: 'This is an issue' })
       .set('User-Agent', 'agent')
       .auth('token', process.env.ACCESS_TOKEN);
@@ -39,7 +40,7 @@ describe('Github POST and PATCH request Test', () => {
   });
 
   it('Modifying an issue', async () => {
-    const response = await agent.patch(`https://api.github.com/repos/${repo.login}/${repo.name}/issues/${issue.number}`)
+    const response = await agent.patch(`https://api.github.com/repos/${repo.login}/${respon.name}/issues/${issue.number}`)
       .send({ body: 'This is the body of the issue' })
       .set('User-Agent', 'agent')
       .auth('token', process.env.ACCESS_TOKEN);
