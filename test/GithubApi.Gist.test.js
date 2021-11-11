@@ -26,6 +26,7 @@ describe('Github DELETE request Test', () => {
     }
   };
   let gist;
+  let respon;
   it('Creating a gist', async () => {
     const response = await agent.post(`${baseUrl}/gists`)
       .send(createGist)
@@ -55,10 +56,14 @@ describe('Github DELETE request Test', () => {
   });
 
   it('Checking gist exists', async () => {
-    const response = await agent.get(gist.url)
-      .set('User-Agent', 'agent')
-      .auth('token', process.env.ACCESS_TOKEN);
+    try {
+      await agent.get(gist.url)
+        .set('User-Agent', 'agent')
+        .auth('token', process.env.ACCESS_TOKEN);
+    } catch (response) {
+      respon = response;
+    }
 
-    expect(response.status).to.equal(statusCode.NOT_FOUND);
+    expect(respon.status).to.equal(statusCode.NOT_FOUND);
   });
 });
